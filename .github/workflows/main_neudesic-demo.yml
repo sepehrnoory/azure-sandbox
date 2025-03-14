@@ -39,8 +39,6 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-          package: '${{ env.AZURE_FUNCTIONAPP_PROJECT_PACK }}'
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_91DA2EF27027496CB626EEDADE07901D }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_83F7EF8433144752B87409135EC7A047 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1E63E434D6B5481A9BBC002AA5F33959 }}
@@ -49,7 +47,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'neudesic-demo'
+          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
           slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          package: '${{ env.AZURE_FUNCTIONAPP_PROJECT_PACK }}'
           
