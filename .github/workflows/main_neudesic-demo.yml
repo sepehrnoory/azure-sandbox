@@ -39,21 +39,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8224825482A1439D859ECBCD654CC4A5 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F93848B8B5F44360AA0DAEF9D848E43A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9FCD516A082447139B39F8FB17616F00 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_91DA2EF27027496CB626EEDADE07901D }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_83F7EF8433144752B87409135EC7A047 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1E63E434D6B5481A9BBC002AA5F33959 }}
 
-      - name: 'Deploy to Azure Web App'
-        uses: Azure/webapps-deploy@v2
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
         with:
           app-name: 'neudesic-demo'
-          slot-name: 'production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-        env:
-          AZURE_FUNCTIONAPP_PACKAGE_PATH: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9FCD516A082447139B39F8FB17616F00 }}
-          AZURE_CLIENT_ID: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8224825482A1439D859ECBCD654CC4A5 }}
-          AZURE_TENANT_ID: ${{ secrets.AZUREAPPSERVICE_TENANTID_F93848B8B5F44360AA0DAEF9D848E43A }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZUREAPPSERVICE_CLIENTSECRET }}
           
