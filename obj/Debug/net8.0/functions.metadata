@@ -1,8 +1,8 @@
 [
   {
-    "name": "MyHttpTrigger",
+    "name": "TestHttpTrigger",
     "scriptFile": "azure-func-demo.dll",
-    "entryPoint": "Company.Function.MyHttpTrigger.Run",
+    "entryPoint": "Company.Function.TestHttpTrigger.Run",
     "language": "dotnet-isolated",
     "properties": {
       "IsCodeless": false
