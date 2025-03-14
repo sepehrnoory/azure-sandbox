@@ -35,13 +35,26 @@ jobs:
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
           popd
-      
+          
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8224825482A1439D859ECBCD654CC4A5 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F93848B8B5F44360AA0DAEF9D848E43A }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9FCD516A082447139B39F8FB17616F00 }}
+
+      - name: Publish Function App
+        run: |
+          dotnet restore
+          dotnet build --configuration Release
+          dotnet publish --configuration Release --output ./output
+          
+      - name: Upload deployment ZIP file as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: neudesic-app-zip
+          path: ./output
+
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
