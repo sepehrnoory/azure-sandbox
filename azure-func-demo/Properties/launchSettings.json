@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "azure_func_demo": {
-      "commandName": "Project",
-      "commandLineArgs": "--port 7202",
-      "launchBrowser": false
-    }
-  }
-}
