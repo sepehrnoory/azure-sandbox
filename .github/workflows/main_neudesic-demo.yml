@@ -44,11 +44,33 @@ jobs:
       #     tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_83F7EF8433144752B87409135EC7A047 }}
       #     subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1E63E434D6B5481A9BBC002AA5F33959 }}
 
+      # - name: 'Run Azure Functions Action'
+      #   uses: Azure/functions-action@v1
+      #   id: fa
+      #   with:
+      #     app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+      #     slot-name: 'Production'
+      #     package: '${{ env.AZURE_FUNCTIONAPP_PROJECT_PACK }}'
+
+      # - name: Publish Function App
+      #   run: |
+      #     dotnet restore
+      #     dotnet build --configuration Release
+      #     dotnet publish --configuration Release --output ./output
+          
+      - name: Upload deployment ZIP file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: neudesic-app-zip
+          path: ./output
+
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+          app-name: 'neudesic-demo'
           slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PROJECT_PACK }}'
+          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          
           
