@@ -45,10 +45,7 @@ jobs:
 
       - name: 'Deploy to Azure Function App'
         run: |
-          az functionapp deployment source config-zip \
-          --resource-group 'learning-resource' \
-          --name 'neudesic-demo' \
-          --src '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
+          az functionapp deployment source config-zip --resource-group 'learning-resource' --name 'neudesic-demo' --src '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
         env:
           AZURE_FUNCTIONAPP_PACKAGE_PATH: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9FCD516A082447139B39F8FB17616F00 }}
