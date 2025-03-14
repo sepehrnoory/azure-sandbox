@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
+using System.IO;
 
 namespace Company.Function
 {
@@ -15,44 +17,48 @@ namespace Company.Function
         }
 
         [Function("MyHttpTrigger")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        string response;
+            string response;
 
-        if (req.Method == HttpMethods.Get)
-        {
+            if (req.Method == HttpMethods.Get)
+            {
 
-            string name = req.Query["name"];
-            int age;
-            bool ageParse = int.TryParse(req.Query["age"], out age);   
+                string? name = req.Query["name"];
+                int age;
+                bool ageParse = int.TryParse(req.Query["age"], out age);   
 
-            if(string.IsNullOrEmpty(name) || !ageParse){
-                respone = "Please provide a valid name and age in the query string.";
-            } else {
-                respone = $"Hello {name}. According to athe information you provided, you are {age} years old.";
+                if(string.IsNullOrEmpty(name) || !ageParse){
+                    response = "Please provide a valid name and age in the query string.";
+                } else {
+                    response = $"Hello {name}. According to the information you provided, you are {age} years old.";
+                }
             }
-        }
-        else if (req.Method == HttpMethods.Post)
-        {
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string name = data?.name;
-            int age = data?.age;
+            else if (req.Method == HttpMethods.Post)
+            {
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            if(string.IsNullOrEmpty(name) || age == null){
-                respone = "Please provide a valid name and age in the request body.";
-            } else {
-                respone = $"Hello {name}. According to athe information you provided, you are {age} years old.";
+                JsonDocument doc = JsonDocument.Parse(requestBody);
+                JsonElement root = doc.RootElement;
+
+                string? name = root.GetProperty("name").ToString();
+                int? age = root.TryGetProperty("age", out JsonElement ageElement) ? ageElement.GetInt32() : (int?)null;
+
+                if(string.IsNullOrEmpty(name) || age == 0){
+                    response = "Please provide a valid name and age in the request body.";
+                } else {
+                    response = $"Hello {name}. According to the information you provided, you are {age} years old.";
+                }
             }
-        }
-        else
-        {
-            response = "Unsupported HTTP method.";
-        }
+            else
+            {
+                response = "Unsupported HTTP method.";
+            }
 
-        return new OkObjectResult(response);
+            return new OkObjectResult(response);
         }
     }
 }
